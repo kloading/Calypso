@@ -13,7 +13,7 @@ post_to_github () {
     echo "Error: GITHUB_TOKEN is required to post comment to GitHub"
   else
     echo "Posting comment to GitHub commit $GITHUB_SHA"
-    msg="$(build_msg true)"
+    msg="build_msg true"
     jq -Mnc --arg msg "$msg" '{"body": "Asdf"}' | curl -L -X POST -d @- \
       -H "Content-Type: application/json" \
       -H "Authorization: token $GITHUB_TOKEN" \
