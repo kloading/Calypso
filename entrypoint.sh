@@ -14,10 +14,11 @@ post_to_github () {
   else
     echo "Posting comment to GitHub commit $GITHUB_SHA"
     msg="build_msg true"
-    jq -Mnc --arg msg "$msg" '{"body": "Asdf"}' | curl -L -X POST -d @- \
+    jq -Mnc --arg msg "$msg" '{"body": "Namespace Isolation policy violated: \"Services should not be allowed to communicate across namespaces\". \n Violating Rule(s): [\nINGRESS Selected: Health-Analytics FROM: Test-Application\n]"}' | curl -L -X POST -d @- \
       -H "Content-Type: application/json" \
       -H "Authorization: token $GITHUB_TOKEN" \
       "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments"
+    exit 1 
   fi
 }
 
