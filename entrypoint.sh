@@ -18,6 +18,7 @@ post_to_github () {
       -H "Content-Type: application/json" \
       -H "Authorization: token $GITHUB_TOKEN" \
       "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments"
+    exit 1 
   fi
 }
 
