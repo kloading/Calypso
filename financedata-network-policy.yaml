@@ -1,0 +1,13 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: financedata-network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: production-finance-database
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          purpose: development
