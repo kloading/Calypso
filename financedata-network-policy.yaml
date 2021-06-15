@@ -11,3 +11,6 @@ spec:
     - namespaceSelector:
         matchLabels:
           purpose: development
+        podSelector:    
+          matchLabels:
+            type: analytics
