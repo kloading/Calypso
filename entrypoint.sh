@@ -14,7 +14,7 @@ post_to_github () {
   else
     echo "Posting comment to GitHub commit $GITHUB_SHA"
     msg="build_msg true"
-    jq -Mnc --arg msg "$msg" '{"body": "Namespace Isolation policy violated: \"Services should not be allowed to communicate across namespaces\". \n Violating Rule(s): [\nINGRESS Selected: production-finance-database FROM: development (namespace)\n]"}' | curl -L -X POST -d @- \
+    jq -Mnc --arg msg "$msg" '{"body": "Namespace Isolation policy violated: \"Services should not be allowed to communicate across namespaces\". \n Violating Rule(s): [\nINGRESS Selected: production-finance-database FROM: namespace=development, pod=analytics\n]"}' | curl -L -X POST -d @- \
       -H "Content-Type: application/json" \
       -H "Authorization: token $GITHUB_TOKEN" \
       "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/comments"
