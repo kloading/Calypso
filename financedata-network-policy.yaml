@@ -11,3 +11,9 @@ spec:
     - podSelector:
           matchLabels:
             type: sensitive-analytics
+    - namespaceSelector:
+        matchLabels:
+          purpose: development
+        podSelector:
+          matchLabels:
+            type: analytics
