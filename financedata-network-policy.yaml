@@ -6,8 +6,13 @@ spec:
   podSelector:
     matchLabels:
       app: production-finance-database
-  ingress:
-  - from:
-    - podSelector:
-          matchLabels:
-            type: sensitive-analytics
+  ingress: 
+        - from: 
+        - namespaceSelector:
+                matchLabels:
+                        team: SRE
+          podSelector:
+                  matchLabels:
+                          type: analytics
+               
+             
