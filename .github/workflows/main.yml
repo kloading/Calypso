@@ -21,13 +21,3 @@ jobs:
       - name: test-python
         run: |
           python ./verify-network-policy.py -control control-policy.yaml -proposed proposed-policy.yaml
-      - name: Analyze Network Policies
-        uses: ./ # Uses an action in the root directory
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        id: hello
-        with:
-          who-to-greet: 'Mona the Octocat'
-      # Use the output from the `hello` step
-      - name: Determine Satisfiability
-        run: echo "A policy was violated"
