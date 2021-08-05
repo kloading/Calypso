@@ -1,5 +1,6 @@
 import yaml
 import os
+import sys
 import json
 import argparse
 from z3 import *
@@ -56,6 +57,7 @@ def parse_policy(control_path, proposed_path):
         print("The proposed network policy is not compliant. Violating example below:")
         if(debug):
             print(s.model())
+        sys.exit()
     else:
         print("The proposed network policy is compliant!")
         # print(s.proof().children())
