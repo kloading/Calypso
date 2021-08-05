@@ -8,7 +8,7 @@ from z3 import *
 namespace_consts = set()
 podlabel_consts = set()
 
-debug = False
+debug = True
 
 if(debug):
     set_param(proof=True)
