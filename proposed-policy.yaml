@@ -21,7 +21,7 @@ spec:
           project: myproject
     - podSelector:
         matchLabels:
-          role: frontend1
+          role: frontend
     ports:
     - protocol: TCP
       port: 6379
