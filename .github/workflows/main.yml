@@ -9,6 +9,13 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v2
+      - name: python-test
+        uses: actions/setup-python@v2.2.2
+        with: 
+          python-version: 3.8
+      - name: test-python
+        run: |
+          python verify-network-policies.py -control control_policy.yaml -proposed proposed_policy.yaml
       - name: Analyze Network Policies
         uses: ./ # Uses an action in the root directory
         env:
