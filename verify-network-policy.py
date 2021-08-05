@@ -7,7 +7,7 @@ from z3 import *
 namespace_consts = set()
 podlabel_consts = set()
 
-debug = False
+debug = True
 
 if(debug):
     set_param(proof=True)
@@ -58,7 +58,7 @@ def parse_policy(control_path, proposed_path):
             print(s.model())
     else:
         print("The proposed network policy is compliant!")
-        # print(s.proof().children())
+        print(s.proof().children())
 
 def parse_ingress(ingress_rules):
     policy_exprs = []
