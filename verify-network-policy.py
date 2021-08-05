@@ -57,7 +57,7 @@ def parse_policy(control_path, proposed_path):
         print("The proposed network policy is not compliant. Violating example below:")
         if(debug):
             print(s.model())
-        sys.exit()
+        sys.exit(-1)
     else:
         print("The proposed network policy is compliant!")
         # print(s.proof().children())
