@@ -9,10 +9,6 @@ jobs:
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v2
-      - name: setup python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8 #install the python needed
       - name: Analyze Network Policies
         uses: ./ # Uses an action in the root directory
         env:
