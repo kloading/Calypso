@@ -5,17 +5,17 @@ jobs:
     runs-on: ubuntu-latest
     name: Kubernetes Network Verification
     steps:
-      # To use this repository's private action,
-      # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Analyze Network Policies
-        uses: ./ # Uses an action in the root directory
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        id: hello
-        with:
-          who-to-greet: 'Mona the Octocat'
-      # Use the output from the `hello` step
-      - name: Determine Satisfiability
-        run: echo "A policy was violated"
+      - name: python-test
+        uses: actions/setup-python@v2.2.2
+        with: 
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+          pip install z3-solver
+      - name: test-python
+        run: |
+          python ./verify-network-policy.py -control control-policy.yaml -proposed proposed-policy.yaml
