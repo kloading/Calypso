@@ -1,5 +1,5 @@
 # Container image that runs your code
-FROM dwdraju/alpine-curl-jq
+FROM docker5gmedia/python-curl-jq:latest
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY . .
