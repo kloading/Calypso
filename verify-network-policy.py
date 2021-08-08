@@ -67,6 +67,8 @@ def parse_policy(control_path, proposed_path):
 def parse_ingress(ingress_rules):
     policy_exprs = []
     for rule in ingress_rules:
+        source_exprs = []
+        port_exprs = []
         sources = rule['from']
         ports = rule['ports']
         for source in sources:
@@ -75,20 +77,37 @@ def parse_ingress(ingress_rules):
             nested = True if len(source_keys) > 1 else False
             if nested:
                 expr = add_nested_selector(source)
-                policy_exprs.append(expr)
+                source_exprs.append(expr)
             elif source_label == 'namespaceSelector':
                 expr = add_namespace_selector(source)
-                policy_exprs.append(expr)
+                source_exprs.append(expr)
             elif source_label == 'podSelector':
                 expr = add_pod_selector(source)
-                policy_exprs.append(expr)
+                source_exprs.append(expr)
             elif source_label == 'ipBlock':
                 expr = add_ip_block(source)
-                policy_exprs.append(expr)
+                source_exprs.append(expr)
             else:
                 print('Unsupported source:', source_label)
+    
+        expr = add_all_ports(ports)
+        port_exprs.append(expr)
 
+        policy_expr = create_policy_expr(source_exprs, port_exprs)
+        policy_exprs.append(policy_expr)
+        
     return policy_exprs
+
+def create_policy_expr(source_exprs, port_exprs):
+    z3_expr = "(and "
+    z3_expr += "(or"
+    for expr in source_exprs:
+        z3_expr += expr
+    z3_expr += ")"
+    for expr in port_exprs:
+        z3_expr += expr
+    z3_expr += ")"
+    return z3_expr
 
 def create_z3_constants():
     smtlib2consts = ""
@@ -96,11 +115,14 @@ def create_z3_constants():
         smtlib2consts += "(declare-const " + namespace + " String)\n"
     for podlabel in podlabel_consts:
         smtlib2consts += "(declare-const " + podlabel + " String)\n"
+
     smtlib2consts += "(declare-const ipAddress Int)"
+    smtlib2consts += "(declare-const protocol String)"
+    smtlib2consts += "(declare-const port Int)"
     return smtlib2consts
 
 def create_policy(policy_exprs, policy_name):
-    policy = "(define-fun " + policy_name + "() Bool\n(or "
+    policy = "(define-fun " + policy_name + "() Bool\n(and "
     for expr in policy_exprs:
         policy += expr
     policy += "\n))"
@@ -189,7 +211,6 @@ def add_ip_block(source):
     z3_expr += "))"
 
     z3_expr += ")"
-    print(z3_expr)
 
     return z3_expr
 
@@ -203,6 +224,21 @@ def add_nested_selector(source):
         else:
             print("Unsupported nested source")
     z3_expr += ")"
+    return z3_expr
+
+def add_port(port):
+    z3_expr = "(and "
+    z3_expr += "(= protocol \"" + port['protocol'] + "\")"
+    z3_expr += "(= port " + str(port['port']) + ")"
+    z3_expr += ")"
+    return z3_expr
+
+def add_all_ports(ports):
+    z3_expr = "(or "
+    for port in ports:
+        z3_expr += add_port(port)
+    z3_expr += ")"
+    print(z3_expr)
     return z3_expr
 
 parser = argparse.ArgumentParser(description='Verify Kubernetes Network Policy Security and Compliance')
