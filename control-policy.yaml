@@ -24,7 +24,7 @@ spec:
           role: frontend
     ports:
     - protocol: TCP
-      port: 6379
+      port: 6378
   egress:
   - to:
     - ipBlock:
