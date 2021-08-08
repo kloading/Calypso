@@ -54,13 +54,15 @@ def parse_policy(control_path, proposed_path):
         print(s.sexpr())
     z3_sat = s.check()
     if(z3_sat == z3.sat):
-        print("The proposed network policy is not compliant. Violating example below:")
+        print("The proposed network policy is not compliant.")
         if(debug):
+            print("Violating example below: ")
             print(s.model())
         sys.exit(-1)
     else:
         print("The proposed network policy is compliant!")
-        print(s.proof().children())
+#        if(debug):
+#            print(s.proof().children())
 
 def parse_ingress(ingress_rules):
     policy_exprs = []
@@ -81,7 +83,8 @@ def parse_ingress(ingress_rules):
                 expr = add_pod_selector(source)
                 policy_exprs.append(expr)
             elif source_label == 'ipBlock':
-                add_ip_block()
+                expr = add_ip_block(source)
+                policy_exprs.append(expr)
             else:
                 print('Unsupported source:', source_label)
 
@@ -93,6 +96,7 @@ def create_z3_constants():
         smtlib2consts += "(declare-const " + namespace + " String)\n"
     for podlabel in podlabel_consts:
         smtlib2consts += "(declare-const " + podlabel + " String)\n"
+    smtlib2consts += "(declare-const ipAddress Int)"
     return smtlib2consts
 
 def create_policy(policy_exprs, policy_name):
@@ -124,8 +128,70 @@ def add_pod_selector(source):
     return z3_expr
         
 
-def add_ip_block():
-    pass
+def add_ip_block(source):
+    cidr = source['ipBlock'].get('cidr')
+    exclusions = source['ipBlock'].get('except')
+
+    bit_arr = []
+    bit_string_low = ''
+    bit_string_high = ''
+
+    cidr = cidr.replace('/', '.')
+    cidr = cidr.split('.')
+
+    mask = int(int(cidr[4]) / 8)
+
+    for i in range(0, len(cidr)-1):
+        bit_arr.append(format(int(cidr[i]), '08b'))
+
+    for i in range(0, mask):
+        bit_string_low += str(bit_arr[i])
+        bit_string_high += str(bit_arr[i])
+    
+    for i in range(mask, 4):
+        bit_string_low += '00000000'
+        bit_string_high += '11111111' 
+
+    decimal_converted_low = int(bit_string_low, 2)
+    decimal_converted_high = int(bit_string_high, 2) 
+
+    z3_expr = "(and "
+    z3_expr += "(>= ipAddress " + str(decimal_converted_low) + " )"
+    z3_expr += "(<= ipAddress " + str(decimal_converted_high) +  " )"
+
+    # Exclusion 
+    bit_arr = []
+    bit_string_low = ''
+    bit_string_high = ''
+
+    cidr = exclusions[0].replace('/', '.')
+    cidr = cidr.split('.')
+
+    mask = int(int(cidr[4]) / 8)
+
+    for i in range(0, len(cidr)-1):
+        bit_arr.append(format(int(cidr[i]), '08b'))
+
+    for i in range(0, mask):
+        bit_string_low += str(bit_arr[i])
+        bit_string_high += str(bit_arr[i])
+    
+    for i in range(mask, 4):
+        bit_string_low += '00000000'
+        bit_string_high += '11111111' 
+
+    decimal_converted_low = int(bit_string_low, 2)
+    decimal_converted_high = int(bit_string_high, 2)    
+
+    z3_expr += "(not (and"
+    z3_expr += "(>= ipAddress " + str(decimal_converted_low) + " )"
+    z3_expr += "(<= ipAddress " + str(decimal_converted_high) + " )"
+    z3_expr += "))"
+
+    z3_expr += ")"
+    print(z3_expr)
+
+    return z3_expr
 
 def add_nested_selector(source):
     z3_expr = "(or "
