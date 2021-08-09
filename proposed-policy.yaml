@@ -21,7 +21,7 @@ spec:
           project: myproject
     - podSelector:
         matchLabels:
-          role: frontend
+          role: UberEats
     ports:
     - protocol: TCP
       port: 6379
