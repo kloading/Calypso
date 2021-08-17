@@ -22,3 +22,4 @@ jobs:
           python ./verify-network-policy.py -control control-policy.yaml -proposed proposed-policy.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PR: ${{ github.event.number }}
