@@ -83,7 +83,8 @@ def parse_policy(control_path, proposed_path):
             pr_url = f"https://api.github.com/repos/{GITHUB_REPO}/commits/{GITHUB_SHA}/comments"
             data = {'body':'lol'}
             r = requests.post(url = pr_url, data = data)
-
+            print(r)
+            
         sys.exit(-1)
     else:
         print("The proposed network policy is compliant!")
