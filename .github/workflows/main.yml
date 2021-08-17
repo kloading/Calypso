@@ -20,3 +20,5 @@ jobs:
       - name: Verify Network Policy
         run: |
           python ./verify-network-policy.py -control control-policy.yaml -proposed proposed-policy.yaml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
