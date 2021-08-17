@@ -3,7 +3,13 @@ import os
 import sys
 import json
 import argparse
+import ipaddress
+import requests
+
 from z3 import *
+
+GITHUB_REPO = os.environ['GITHUB_REPOSITORY']
+GITHUB_SHA = os.environ['GITHUB_SHA']
 
 namespace_consts = set()
 podlabel_consts = set()
@@ -57,7 +63,27 @@ def parse_policy(control_path, proposed_path):
         print("The proposed network policy is not compliant.")
         if(debug):
             print("Violating example below: ")
-            print(s.model())
+            m = s.model()
+            reserved_inputs = ['proposed-policy', 'control-policy', 'conjecture']
+            decls = m.decls()
+            for decl in decls:
+                if str(decl) == 'ipAddress':
+                    binary_ip = m[decl].as_binary_string()
+                    block1 = str(int(binary_ip[0:8], 2))
+                    block2 = str(int(binary_ip[8:16], 2))
+                    block3 = str(int(binary_ip[16:24], 2))
+                    block4 = str(int(binary_ip[24:32], 2))
+
+                    print(f"ipAddress : {block1}.{block2}.{block3}.{block4}")
+                    continue
+
+                if str(decl) not in reserved_inputs:
+                    print(str(decl),":", m[decl])
+        
+            pr_url = f"https://api.github.com/repos/{GITHUB_REPO}/commits/{GITHUB_SHA}/comments"
+            data = {'body':'lol'}
+            r = requests.post(url = pr_url, data = data)
+
         sys.exit(-1)
     else:
         print("The proposed network policy is compliant!")
