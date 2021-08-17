@@ -10,6 +10,7 @@ from z3 import *
 
 GITHUB_REPO = os.environ['GITHUB_REPOSITORY']
 GITHUB_SHA = os.environ['GITHUB_SHA']
+GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
 
 namespace_consts = set()
 podlabel_consts = set()
@@ -81,7 +82,9 @@ def parse_policy(control_path, proposed_path):
                     print(str(decl),":", m[decl])
         
             pr_url = f"https://api.github.com/repos/{GITHUB_REPO}/commits/{GITHUB_SHA}/comments"
+            headers = {'Content-Type': 'application/json', 'Authorization': f'token {GITHUB_TOKEN}'}
             data = {'body':'lol'}
+            
             r = requests.post(url = pr_url, data = data)
             print(r)
             
