@@ -89,7 +89,7 @@ def parse_policy(control_path, proposed_path):
             data = {'body':'lol'}
             
             r = requests.post(url = pr_url, data = data, headers = headers)
-            print(r)
+            print(r.text)
             
         sys.exit(-1)
     else:
