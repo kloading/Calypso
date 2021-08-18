@@ -11,7 +11,7 @@ from z3 import *
 GITHUB_REPO = os.environ['GITHUB_REPOSITORY']
 GITHUB_SHA = os.environ['GITHUB_SHA']
 GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
-GITHUB_PR = os.environ['GITHUB_TOKEN']
+GITHUB_PR = os.environ['GITHUB_PR']
 
 namespace_consts = set()
 podlabel_consts = set()
