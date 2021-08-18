@@ -94,11 +94,11 @@ def parse_policy(control_path, proposed_path):
             <details>
               <summary>Violating traffic example</summary>
                 
-                project: ""
-                IP Address: 172.17.1.1
-                role: ""  
-                port: 6379
-                protocol: "TCP"
+            project: ""
+            IP Address: 172.17.1.1
+            role: ""  
+            port: 6379
+            protocol: "TCP"
             </details>'''
             data = {'body':data_string}
             r = requests.post(url = pr_url, data = json.dumps(data), headers = headers)
