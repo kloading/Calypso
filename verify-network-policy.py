@@ -98,7 +98,7 @@ def parse_policy(control_path, proposed_path):
             - IP Address: 172.17.1.1
             - role: ""  
             - port: 6379
-            - protocol: "TCP" </details>'''
+            - protocol: "TCP" '''
             data = {'body':data_string}
             r = requests.post(url = pr_url, data = json.dumps(data), headers = headers)
             print(r.text)
