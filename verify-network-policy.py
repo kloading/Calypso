@@ -83,12 +83,12 @@ def parse_policy(control_path, proposed_path):
                     print(str(decl),":", m[decl])
             print(GITHUB_REPO)
             print(GITHUB_SHA)
-            pr_url = f"https://api.github.com/repos/{GITHUB_REPO}/issues/{GITHUB_SHA}/comments"
+            pr_url = f"https://api.github.com/repos/{GITHUB_REPO}/issues/{GITHUB_PR}/comments"
             print(pr_url)
             headers = {'Content-Type': 'application/json', 'Authorization': f'token {GITHUB_TOKEN}'}
             data = {'body':'lol'}
             
-            r = requests.post(url = pr_url, data = data)
+            r = requests.post(url = pr_url, data = data, headers = headers)
             print(r)
             
         sys.exit(-1)
