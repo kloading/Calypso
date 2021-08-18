@@ -79,7 +79,7 @@ def parse_policy(control_path, proposed_path):
                     block4 = str(int(binary_ip[24:32], 2))
 
                     print(f"ipAddress : {block1}.{block2}.{block3}.{block4}")
-                    violating_example += f"IP Address: {block1}.{block2}.{block3}.{block4}\n"
+                    violating_example += f"\tIP Address: {block1}.{block2}.{block3}.{block4}\n"
                     continue
 
                 if str(decl) not in reserved_inputs:
