@@ -3,7 +3,15 @@ import os
 import sys
 import json
 import argparse
+import ipaddress
+import requests
+
 from z3 import *
+
+GITHUB_REPO = os.environ['GITHUB_REPOSITORY']
+GITHUB_SHA = os.environ['GITHUB_SHA']
+GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
+GITHUB_PR = os.environ['GITHUB_PR']
 
 namespace_consts = set()
 podlabel_consts = set()
@@ -57,10 +65,47 @@ def parse_policy(control_path, proposed_path):
         print("The proposed network policy is not compliant.")
         if(debug):
             print("Violating example below: ")
-            print(s.model())
+            m = s.model()
+            reserved_inputs = ['proposed-policy', 'control-policy', 'conjecture']
+            decls = m.decls()
+            violating_example = ''
+            
+            for decl in decls:
+                if str(decl) == 'ipAddress':
+                    binary_ip = m[decl].as_binary_string()
+                    block1 = str(int(binary_ip[0:8], 2))
+                    block2 = str(int(binary_ip[8:16], 2))
+                    block3 = str(int(binary_ip[16:24], 2))
+                    block4 = str(int(binary_ip[24:32], 2))
+
+                    print(f"ipAddress : {block1}.{block2}.{block3}.{block4}")
+                    violating_example += f"\tIP Address: {block1}.{block2}.{block3}.{block4}\n"
+                    continue
+
+                if str(decl) not in reserved_inputs:
+                    print(str(decl), ":", m[decl])
+                    violating_example += f"\t{str(decl)}: {m[decl]}\n"
+
+            pr_url = f"https://api.github.com/repos/{GITHUB_REPO}/issues/{GITHUB_PR}/comments"
+            headers = {'Content-Type': 'application/json', 'Authorization': f'token {GITHUB_TOKEN}'}
+            
+            data_string = f"<strong>:x: The proposed network policy is not compliant. </strong>\n<details><summary>Violating traffic example</summary>\n\n{violating_example}"
+            data = {'body':data_string}
+            
+            r = requests.post(url = pr_url, data = json.dumps(data), headers = headers)
+            print(r.text)
+            
         sys.exit(-1)
     else:
         print("The proposed network policy is compliant!")
+        pr_url = f"https://api.github.com/repos/{GITHUB_REPO}/issues/{GITHUB_PR}/comments"
+        headers = {'Content-Type': 'application/json', 'Authorization': f'token {GITHUB_TOKEN}'}
+            
+        data_string = "<strong>:white_check_mark: The proposed network policy is compliant."
+        data = {'body':data_string}
+            
+        r = requests.post(url = pr_url, data = json.dumps(data), headers = headers)
+        print(r.text)
 #        if(debug):
 #            print(s.proof().children())
 
