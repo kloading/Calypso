@@ -68,6 +68,8 @@ def parse_policy(control_path, proposed_path):
             m = s.model()
             reserved_inputs = ['proposed-policy', 'control-policy', 'conjecture']
             decls = m.decls()
+            violating_example = ''
+            
             for decl in decls:
                 if str(decl) == 'ipAddress':
                     binary_ip = m[decl].as_binary_string()
@@ -77,19 +79,18 @@ def parse_policy(control_path, proposed_path):
                     block4 = str(int(binary_ip[24:32], 2))
 
                     print(f"ipAddress : {block1}.{block2}.{block3}.{block4}")
+                    violating_example += f"IP Address: {block1}.{block2}.{block3}.{block4}\n"
                     continue
 
                 if str(decl) not in reserved_inputs:
-                    print(str(decl),":", m[decl])
-            print(GITHUB_REPO)
-            print(GITHUB_SHA)
+                    print(str(decl), ":", m[decl])
+                    violating_example += f"{str(decl)}: {m[decl]}"
+
             pr_url = f"https://api.github.com/repos/{GITHUB_REPO}/issues/{GITHUB_PR}/comments"
-            print(pr_url)
             headers = {'Content-Type': 'application/json', 'Authorization': f'token {GITHUB_TOKEN}'}
-            data = {'body':'lol'}
+            data = {'body':f'The proposed network policy is not compliant. Violating traffic example below:\n{violating_example}'}
             
             r = requests.post(url = pr_url, data = json.dumps(data), headers = headers)
-            print(r.text)
             
         sys.exit(-1)
     else:
