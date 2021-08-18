@@ -92,13 +92,13 @@ def parse_policy(control_path, proposed_path):
             
             data_string = '''<strong>:x: The proposed network policy is not compliant. </strong>
             <details>
-                <summary>Violating traffic example</summary>
-
-                  project: ""
-                  IP Address: 172.17.1.1
-                  role: ""  
-                  port: 6379
-                  protocol: "TCP"
+              <summary>Violating traffic example</summary>
+                
+                project: ""
+                IP Address: 172.17.1.1
+                role: ""  
+                port: 6379
+                protocol: "TCP"
             </details>'''
             data = {'body':data_string}
             r = requests.post(url = pr_url, data = json.dumps(data), headers = headers)
