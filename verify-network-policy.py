@@ -88,15 +88,24 @@ def parse_policy(control_path, proposed_path):
 
             pr_url = f"https://api.github.com/repos/{GITHUB_REPO}/issues/{GITHUB_PR}/comments"
             headers = {'Content-Type': 'application/json', 'Authorization': f'token {GITHUB_TOKEN}'}
-            data = {'body':f'The proposed network policy is not compliant. Violating traffic example below:\n{violating_example}'}
             
             data_string = f"<strong>:x: The proposed network policy is not compliant. </strong>\n<details><summary>Violating traffic example</summary>\n\n{violating_example}"
             data = {'body':data_string}
+            
             r = requests.post(url = pr_url, data = json.dumps(data), headers = headers)
             print(r.text)
+            
         sys.exit(-1)
     else:
         print("The proposed network policy is compliant!")
+        pr_url = f"https://api.github.com/repos/{GITHUB_REPO}/issues/{GITHUB_PR}/comments"
+        headers = {'Content-Type': 'application/json', 'Authorization': f'token {GITHUB_TOKEN}'}
+            
+        data_string = "<strong>:white_check_mark: The proposed network policy is compliant."
+        data = {'body':data_string}
+            
+        r = requests.post(url = pr_url, data = json.dumps(data), headers = headers)
+        print(r.text)
 #        if(debug):
 #            print(s.proof().children())
 
