@@ -90,7 +90,7 @@ def parse_policy(control_path, proposed_path):
             headers = {'Content-Type': 'application/json', 'Authorization': f'token {GITHUB_TOKEN}'}
             data = {'body':f'The proposed network policy is not compliant. Violating traffic example below:\n{violating_example}'}
             
-            data = '''
+            data_string = '''
             <strong>:x: The proposed network policy is not compliant. </strong>
             <details>
                 <summary>Violating traffic example</summary>
@@ -102,8 +102,9 @@ def parse_policy(control_path, proposed_path):
                     protocol: "TCP"
             </details>
             '''
+            data = {'body':data_string}
             r = requests.post(url = pr_url, data = json.dumps(data), headers = headers)
-            
+            print(r.text)
         sys.exit(-1)
     else:
         print("The proposed network policy is compliant!")
