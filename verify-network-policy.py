@@ -88,7 +88,7 @@ def parse_policy(control_path, proposed_path):
             headers = {'Content-Type': 'application/json', 'Authorization': f'token {GITHUB_TOKEN}'}
             data = {'body':'lol'}
             
-            r = requests.post(url = pr_url, data = data, headers = headers)
+            r = requests.post(url = pr_url, data = json.dumps(data), headers = headers)
             print(r.text)
             
         sys.exit(-1)
