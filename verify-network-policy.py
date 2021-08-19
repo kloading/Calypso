@@ -106,8 +106,9 @@ def parse_policy(control_path, proposed_path):
             
         r = requests.post(url = pr_url, data = json.dumps(data), headers = headers)
         print(r.text)
-#        if(debug):
-#            print(s.proof().children())
+        
+        if(debug):
+            print(s.proof().children())
 
 def parse_ingress(ingress_rules):
     policy_exprs = []
