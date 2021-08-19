@@ -22,9 +22,6 @@ spec:
     - podSelector:
         matchLabels:
           role: frontend
-    - podSelector:
-        matchLabels:
-          role: boss
     ports:
     - protocol: TCP
       port: 6379
