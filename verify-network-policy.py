@@ -264,7 +264,7 @@ def add_ip_block(source):
     return z3_expr
 
 def add_nested_selector(source):
-    z3_expr = "(or "
+    z3_expr = "(and "
     for nested_source in source:
         if nested_source == 'namespaceSelector':
             z3_expr += add_namespace_selector({nested_source: source[nested_source]}) 
