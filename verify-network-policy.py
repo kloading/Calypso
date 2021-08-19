@@ -85,9 +85,7 @@ def parse_policy(control_path, proposed_path):
                     continue
 
                 if str(decl) not in reserved_inputs:
-                    print("here")
                     if m[decl].as_string() != "":
-                        print("here2")
                         print(str(decl), ":", m[decl])
                         violating_example += f"\t{str(decl)}: {m[decl]}\n"
 
