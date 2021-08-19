@@ -73,14 +73,15 @@ def parse_policy(control_path, proposed_path):
             for decl in decls:
                 if str(decl) == 'ipAddress':
                     binary_ip = m[decl].as_binary_string()
-                    print("binaryip", binary_ip)
-                    block1 = str(int(binary_ip[0:8], 2))
-                    block2 = str(int(binary_ip[8:16], 2))
-                    block3 = str(int(binary_ip[16:24], 2))
-                    block4 = str(int(binary_ip[24:32], 2))
+                    print("binaryip", type(binary_ip))
+                    if binary_ip != 0:
+                        block1 = str(int(binary_ip[0:8], 2))
+                        block2 = str(int(binary_ip[8:16], 2))
+                        block3 = str(int(binary_ip[16:24], 2))
+                        block4 = str(int(binary_ip[24:32], 2))
 
-                    print(f"ipAddress : {block1}.{block2}.{block3}.{block4}")
-                    violating_example += f"\tIP Address: {block1}.{block2}.{block3}.{block4}\n"
+                        print(f"ipAddress : {block1}.{block2}.{block3}.{block4}")
+                        violating_example += f"\tIP Address: {block1}.{block2}.{block3}.{block4}\n"
                     continue
 
                 if str(decl) not in reserved_inputs:
