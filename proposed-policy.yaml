@@ -13,7 +13,7 @@ spec:
   ingress:
   - from:
     - ipBlock:
-        cidr: 172.17.0.0/16
+        cidr: 172.17.0.0/8
         except:
         - 172.17.1.0/24
     - namespaceSelector:
@@ -22,9 +22,6 @@ spec:
     - podSelector:
         matchLabels:
           role: frontend
-    - podSelector:
-        matchLabels:
-          role: datalake
     ports:
     - protocol: TCP
       port: 6379
