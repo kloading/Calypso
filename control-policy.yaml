@@ -19,7 +19,7 @@ spec:
     - namespaceSelector:
         matchLabels:
           project: myproject
-      podSelector:
+    - podSelector:
         matchLabels:
           role: frontend
     ports:
