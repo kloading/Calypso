@@ -74,7 +74,7 @@ def parse_policy(control_path, proposed_path):
                 if str(decl) == 'ipAddress':
                     binary_ip = m[decl].as_binary_string()
                     print("binaryip", type(binary_ip))
-                    if binary_ip != 0:
+                    if binary_ip != '0':
                         block1 = str(int(binary_ip[0:8], 2))
                         block2 = str(int(binary_ip[8:16], 2))
                         block3 = str(int(binary_ip[16:24], 2))
