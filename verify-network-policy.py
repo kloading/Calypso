@@ -86,7 +86,7 @@ def parse_policy(control_path, proposed_path):
 
                 if str(decl) not in reserved_inputs:
                     print(str(decl), ":", m[decl])
-                    print(m[decl])
+                    print(m[decl] == "")
                     violating_example += f"\t{str(decl)}: {m[decl]}\n"
 
             pr_url = f"https://api.github.com/repos/{GITHUB_REPO}/issues/{GITHUB_PR}/comments"
