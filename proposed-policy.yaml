@@ -22,6 +22,12 @@ spec:
       podSelector:
         matchLabels:
           role: frontend
+    - namespaceSelector:
+        matchLabels:
+          project: prod-data
+      podSelector:
+        matchLabels:
+          serv: genomics
     ports:
     - protocol: TCP
       port: 6379
