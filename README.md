@@ -1,2 +1,2 @@
 # Calypso
-Automated reasoning to assert the permisiveness of kubernetes network-policies
+Automated reasoning to verify the security and compliance of kubernetes network-policies
